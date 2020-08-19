@@ -1,6 +1,6 @@
 ---
 id: concurrent-mode-patterns
-title: Concurrent UI Patterns (Experimental)
+title: أنماط واجهة المستخدم المتزامنة (تجريبية)
 permalink: docs/concurrent-mode-patterns.html
 prev: concurrent-mode-suspense.html
 next: concurrent-mode-adoption.html
@@ -15,17 +15,16 @@ next: concurrent-mode-adoption.html
 
 <div class="scary">
 
->Caution:
+>تحذير:
 >
->This page describes **experimental features that are [not yet available](/docs/concurrent-mode-adoption.html) in a stable release**. Don't rely on experimental builds of React in production apps. These features may change significantly and without a warning before they become a part of React.
+>تصف هذه الصفحة **الميزات التجريبية التي [ لم تتوفر بعد ](/docs/concurrent-mode-adoption.html) في إصدار ثابت**. لا تعتمد على الإصدارات التجريبية من React في تطبيقات الإنتاج. قد تتغير هذه الميزات بشكل كبير وبدون سابق إنذار قبل أن تصبح جزءًا من React.
 >
->This documentation is aimed at early adopters and people who are curious. **If you're new to React, don't worry about these features** -- you don't need to learn them right now. For example, if you're looking for a data fetching tutorial that works today, read [this article](https://www.robinwieruch.de/react-hooks-fetch-data/) instead.
-
+>هذا التوثيق موجه للمتبنين الأوائل والأشخاص الفضوليين. إذا كنت جديدًا في React ، فلا تقلق بشأن هذه الميزات - لست بحاجة إلى تعلمها الآن. على سبيل المثال ، إذا كنت تبحث عن برنامج تعليمي لجلب البيانات يعمل اليوم ، فاقرأ [ هذه المقالة ](https://www.robinwieruch.de/react-hooks-fetch-data/) بدلاً من ذلك.
 </div>
 
-Usually, when we update the state, we expect to see changes on the screen immediately. This makes sense because we want to keep our app responsive to user input. However, there are cases where we might prefer to **defer an update from appearing on the screen**.
+عادة ، عندما نقوم بتحديث الحالة (State) ، نتوقع رؤية التغييرات على الشاشة على الفور. هذا منطقي لأننا نريد إبقاء تطبيقنا مستجيبًا لتفاعل المستخدم. ومع ذلك ، هناك حالات قد نفضل فيها **تأجيل ظهور تحديث على الشاشة**.
 
-For example, if we switch from one page to another, and none of the code or data for the next screen has loaded yet, it might be frustrating to immediately see a blank page with a loading indicator. We might prefer to stay longer on the previous screen. Implementing this pattern has historically been difficult in React. Concurrent Mode offers a new set of tools to do that.
+على سبيل المثال ، إذا قمنا بالتنقل من صفحة إلى أخرى ، ولم يتم تحميل أي من التعليمات البرمجية أو البيانات للشاشة التالية حتى الآن ، فسوف يكون من المحبط رؤية صفحة فارغة تحتوي على مؤشر جار التحميل. قد نفضل البقاء لفترة أطول على الشاشة السابقة. كان تنفيذ هذا النمط صعبًا تاريخيًا في React. يوفر الوضع المتزامن (Concurrent Mode) مجموعة جديدة من الأدوات للقيام بذلك.
 
 - [Transitions](#transitions)
   - [Wrapping setState in a Transition](#wrapping-setstate-in-a-transition)
