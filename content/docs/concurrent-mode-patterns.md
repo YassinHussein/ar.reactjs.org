@@ -7,7 +7,7 @@ next: concurrent-mode-adoption.html
 ---
 
 <style>
-.scary > blockquote {
+.scary > blockquote {s
   background-color: rgba(237, 51, 21, 0.2);
   border-left-color: #ed3315;
 }
@@ -26,7 +26,7 @@ next: concurrent-mode-adoption.html
 
 على سبيل المثال ، إذا قمنا بالتنقل من صفحة إلى أخرى ، ولم يتم تحميل أي من التعليمات البرمجية أو البيانات للشاشة التالية حتى الآن ، فسوف يكون من المحبط رؤية صفحة فارغة تحتوي على مؤشر جار التحميل. قد نفضل البقاء لفترة أطول على الشاشة السابقة. كان تنفيذ هذا النمط صعبًا تاريخيًا في React. يوفر الوضع المتزامن (Concurrent Mode) مجموعة جديدة من الأدوات للقيام بذلك.
 
-- [Transitions](#transitions)
+- [الانتقالات](#transitions)
   - [Wrapping setState in a Transition](#wrapping-setstate-in-a-transition)
   - [Adding a Pending Indicator](#adding-a-pending-indicator)
   - [Reviewing the Changes](#reviewing-the-changes)
@@ -48,15 +48,15 @@ next: concurrent-mode-adoption.html
 
 ## Transitions {#transitions}
 
-Let's revisit [this demo](https://codesandbox.io/s/infallible-feather-xjtbu) from the previous page about [Suspense for Data Fetching](/docs/concurrent-mode-suspense.html).
+دعنا نعيد زيارة [هذا العرض التوضيحي](https://codesandbox.io/s/infallible-feather-xjtbu) من الصفحة السابقة [حول التشويق لجلب البيانات](/docs/concurrent-mode-suspense.html).
 
-When we click the "Next" button to switch the active profile, the existing page data immediately disappears, and we see the loading indicator for the whole page again. We can call this an "undesirable" loading state. **It would be nice if we could "skip" it and wait for some content to load before transitioning to the new screen.**
+عندما نضغط على زر "التالي" لتبديل البروفايل النشط ، تختفي بيانات الصفحة الحالية على الفور ، ونرى مؤشر التحميل على الصفحة بأكملها مرة أخرى. نطلق على هذا حالة تحميل "غير مرغوب فيها".** سيكون من الرائع لو تمكنا من "تخطيه" وانتظار تحميل بعض المحتوى قبل الانتقال إلى الشاشة الجديدة**.
 
-React offers a new built-in `useTransition()` Hook to help with this.
+تقدم React خطافًا جديدًا مدمج في React تسمى `useTransition()` للمساعدة في ذلك.
 
-We can use it in three steps.
+يمكننا استخدامه في ثلاث خطوات.
 
-First, we'll make sure that we're actually using Concurrent Mode. We'll talk more about [adopting Concurrent Mode](/docs/concurrent-mode-adoption.html) later, but for now it's sufficient to know that we need to use `ReactDOM.createRoot()` rather than `ReactDOM.render()` for this feature to work:
+أولاً ، سنتأكد من أننا نستخدم الوضع المتزامن بالفعل. سنتحدث أكثر عن [اعتماد الوضع المتزامن](/docs/concurrent-mode-adoption.html) لاحقًا ، ولكن يكفي في الوقت الحالي معرفة أننا بحاجة إلى استخدام `ReactDOM.createRoot()` بدلاً من `ReactDOM.render()` حتى تعمل هذه الميزة:
 
 ```js
 const rootElement = document.getElementById("root");
@@ -64,13 +64,13 @@ const rootElement = document.getElementById("root");
 ReactDOM.createRoot(rootElement).render(<App />);
 ```
 
-Next, we'll add an import for the `useTransition` Hook from React:
+بعد ذلك ، سنقوم باستيراد الخطاف (Hook) `useTransition` من React:
 
 ```js
 import React, { useState, useTransition, Suspense } from "react";
 ```
 
-Finally, we'll use it inside the `App` component:
+أخيرًا ، سنستخدمه داخل مكون (Component) `App`:
 
 ```js{3-5}
 function App() {
@@ -81,12 +81,12 @@ function App() {
   // ...
 ```
 
-**By itself, this code doesn't do anything yet.** We will need to use this Hook's return values to set up our state transition. There are two values returned from `useTransition`:
+**في حد ذاته ، هذا الكود لا يفعل أي شيء بعد.** سنحتاج إلى استخدام قيم الإرجاع الخاصة بهذا الخطاف (Hook) لإعداد انتقال الحالة. هناك قيمتان تم إرجاعها من `useTransition`:
 
-* `startTransition` is a function. We'll use it to tell React *which* state update we want to defer.
-* `isPending` is a boolean. It's React telling us whether that transition is ongoing at the moment.
+* `startTransition` دالة. سنستخدمه لإخبار React * عن * تحديث الحالة الذي نريد تأجيله.
+* `isPending` قيمة منطقية. إنها React تخبرنا ما إذا كان هذا الانتقال مستمرًا في الوقت الحالي.
 
-We will use them right below.
+سوف نستخدمهم أدناه.
 
 Note we passed a configuration object to `useTransition`. Its `timeoutMs` property specifies **how long we're willing to wait for the transition to finish**. By passing `{timeoutMs: 3000}`, we say "If the next profile takes more than 3 seconds to load, show the big spinner -- but before that timeout it's okay to keep showing the previous screen".
 
